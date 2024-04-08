@@ -1,4 +1,4 @@
-package com.example.demo.bo;
+package com.example.demo.bo.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bo.RecipeBo;
 import com.example.demo.entity.Recipe;
 import com.example.demo.payload.RecipeDto;
 import com.example.demo.repository.RecipeRepo;
