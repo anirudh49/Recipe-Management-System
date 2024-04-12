@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class RecipeDto {
+public class FullRecipeDto {
 
 	private int id;
 	private String name;

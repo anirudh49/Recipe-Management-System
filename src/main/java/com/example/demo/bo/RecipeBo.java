@@ -1,14 +1,19 @@
 package com.example.demo.bo;
 
+import java.io.IOException;
 import java.util.List;
 
-import com.example.demo.payload.RecipeDto;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.payload.FullRecipeDto;
+import com.example.demo.payload.SimplRecipeDto;
 
 public interface RecipeBo {
 
-	RecipeDto createRecipe(RecipeDto recipeDto);
-	RecipeDto updateRecipe(RecipeDto recipeDto);
-	RecipeDto findById(int recipeId);
-	List<RecipeDto> findAll();
+	SimplRecipeDto createRecipe(SimplRecipeDto simplRecipeDto, MultipartFile multipartFile) throws IOException;
+	SimplRecipeDto updateRecipe(SimplRecipeDto simplRecipeDto);
+	SimplRecipeDto findById(int recipeId);
+	List<SimplRecipeDto> findAll();
 	String deleteRecipe(int recipeId);
+	byte[] findImageDataById(int recipeId);
 }
