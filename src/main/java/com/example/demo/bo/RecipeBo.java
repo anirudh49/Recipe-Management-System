@@ -15,5 +15,5 @@ public interface RecipeBo {
 	SimplRecipeDto findById(int recipeId);
 	List<SimplRecipeDto> findAll();
 	String deleteRecipe(int recipeId);
-	byte[] findImageDataById(int recipeId);
+	byte[] findImageDataById(int recipeId) throws IOException;
 }

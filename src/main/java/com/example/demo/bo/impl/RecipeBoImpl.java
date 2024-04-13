@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.bo.RecipeBo;
 import com.example.demo.entity.Recipe;
 import com.example.demo.payload.FullRecipeDto;
+import com.example.demo.payload.ImagesUtil;
 import com.example.demo.payload.SimplRecipeDto;
 import com.example.demo.repository.RecipeRepo;
 
@@ -29,7 +30,7 @@ public class RecipeBoImpl implements RecipeBo {
 		if (multipartFile != null) {
 			byte[] imageData = multipartFile.getBytes();
 			Recipe rcpwithImg = simplDtoToRecipe(simplRecipeDto);
-			rcpwithImg.setImage(imageData);
+			rcpwithImg.setImage(ImagesUtil.compress(imageData));
 			Recipe recipe = recipeRepo.save(rcpwithImg);
 			return recipeToSimplDto(recipe);
 		}
@@ -73,9 +74,9 @@ public class RecipeBoImpl implements RecipeBo {
 	}
 
 	@Override
-	public byte[] findImageDataById(int recipeId) {
+	public byte[] findImageDataById(int recipeId) throws IOException {
 		Recipe recipe = recipeRepo.findById(recipeId).get();
-		return recipe.getImage();
+		return ImagesUtil.decompress(recipe.getImage());
 	}
 
 	private Recipe fullDtoToRecipe(FullRecipeDto fullRecipeDto) {

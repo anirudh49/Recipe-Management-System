@@ -55,7 +55,7 @@ public class RecipeController {
 	}
 	
 	@GetMapping("/getImage/{recipeId}")
-	ResponseEntity<?> findImageById(@PathVariable int recipeId){
+	ResponseEntity<?> findImageById(@PathVariable int recipeId) throws IOException{
 		byte[] imageData = recipeBo.findImageDataById(recipeId);
 		return ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaType.valueOf("image/png"))
