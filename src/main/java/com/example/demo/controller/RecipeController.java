@@ -61,4 +61,9 @@ public class RecipeController {
 				.contentType(MediaType.valueOf("image/png"))
 				.body(imageData);
 	}
+	
+	@GetMapping("/findByCategory/{category_id}")
+	List<SimplRecipeDto> findByCategoryId(@PathVariable int category_id){
+		return recipeBo.findByCategory(category_id);
+	}
 }

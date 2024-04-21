@@ -13,7 +13,8 @@ import lombok.ToString;
 @Builder
 public class SimplRecipeDto {
 	
-	private int id;
+	private int recipe_id;
+	private int category_id;
 	private String name;
 	private String description;
 	private String ingredients;

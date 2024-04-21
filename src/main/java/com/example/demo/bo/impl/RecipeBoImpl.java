@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.bo.RecipeBo;
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Recipe;
 import com.example.demo.payload.FullRecipeDto;
 import com.example.demo.payload.ImagesUtil;
 import com.example.demo.payload.SimplRecipeDto;
+import com.example.demo.repository.CategoryRepo;
 import com.example.demo.repository.RecipeRepo;
 
 @Service
@@ -24,27 +26,40 @@ public class RecipeBoImpl implements RecipeBo {
 
 	@Autowired
 	RecipeRepo recipeRepo;
+	
+	@Autowired
+	CategoryRepo categoryRepo;
 
 	@Override
 	public SimplRecipeDto createRecipe(SimplRecipeDto simplRecipeDto, MultipartFile multipartFile) throws IOException {
 		if (multipartFile != null) {
 			byte[] imageData = multipartFile.getBytes();
+			Category category = categoryRepo.findById(simplRecipeDto.getCategory_id()).get();
 			Recipe rcpwithImg = simplDtoToRecipe(simplRecipeDto);
+			rcpwithImg.setCategory(category);
 			rcpwithImg.setImage(ImagesUtil.compress(imageData));
 			Recipe recipe = recipeRepo.save(rcpwithImg);
 			return recipeToSimplDto(recipe);
 		}
-		Recipe recipe = recipeRepo.save(simplDtoToRecipe(simplRecipeDto));
-		return recipeToSimplDto(recipe);
+		else {
+			Category category = categoryRepo.findById(simplRecipeDto.getCategory_id()).get();
+			Recipe recipe = simplDtoToRecipe(simplRecipeDto);
+			recipe.setCategory(category);
+			Recipe output =  recipeRepo.save(recipe);
+			return recipeToSimplDto(output);
+		}
+		
 	}
 
 	@Override
 	public SimplRecipeDto updateRecipe(SimplRecipeDto simplRecipeDto) {
-		Recipe recipe = recipeRepo.findById(simplRecipeDto.getId()).get();
+		Recipe recipe = recipeRepo.findById(simplRecipeDto.getRecipe_id()).get();
 		recipe.setName(simplRecipeDto.getName());
 		recipe.setDescription(simplRecipeDto.getDescription());
 		recipe.setIngredients(simplRecipeDto.getIngredients());
 		recipe.setInstructions(simplRecipeDto.getInstructions());
+		Category category = categoryRepo.findById(simplRecipeDto.getCategory_id()).get();
+		recipe.setCategory(category);
 
 		SimplRecipeDto updateRecipeDto = recipeToSimplDto(recipeRepo.save(recipe));
 		return updateRecipeDto;
@@ -77,6 +92,16 @@ public class RecipeBoImpl implements RecipeBo {
 	public byte[] findImageDataById(int recipeId) throws IOException {
 		Recipe recipe = recipeRepo.findById(recipeId).get();
 		return ImagesUtil.decompress(recipe.getImage());
+	}
+	
+	@Override
+	public List<SimplRecipeDto> findByCategory(int category_id) {
+		List<SimplRecipeDto> simplRecipeDtos = new ArrayList<>();
+		List<Recipe> recipes = recipeRepo.findByCategoryId(category_id);
+		for(int i=0;i<recipes.size();i++) {
+			simplRecipeDtos.add(recipeToSimplDto(recipes.get(i)));
+		}
+		return simplRecipeDtos;
 	}
 
 	private Recipe fullDtoToRecipe(FullRecipeDto fullRecipeDto) {

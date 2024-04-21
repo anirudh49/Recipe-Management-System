@@ -28,7 +28,7 @@ public class CategoryBoImpl implements CategoryBo {
 
 	@Override
 	public CategoryDto updateCategory(CategoryDto categoryDto) {
-		Category category = categoryRepo.findById(dtoToCategory(categoryDto).getId()).get();
+		Category category = categoryRepo.findById(dtoToCategory(categoryDto).getCategory_id()).get();
 		category.setName(categoryDto.getName());
 		category.setDescription(categoryDto.getDescription());
 		Category updatedCategory = categoryRepo.save(category);
